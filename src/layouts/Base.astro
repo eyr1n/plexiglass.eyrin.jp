@@ -1,0 +1,87 @@
+---
+import { IconBrandTwitterFilled } from '@tabler/icons-react';
+import { SITE_DESCRIPTION, SITE_TITLE } from '../consts';
+
+import 'katex/dist/katex.min.css';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const { title, description }: Props = Astro.props;
+---
+
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+    <title>{title}</title>
+    <meta name="title" content={title} />
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+
+    <slot name="head" />
+  </head>
+
+  <body
+    class="mx-auto max-w-(--breakpoint-md) px-4 wrap-break-word text-slate-800"
+  >
+    <header
+      class="-mx-4 mb-1 flex items-center justify-between rounded-b-3xl border-x border-slate-700 p-6 shadow-[0_4px] shadow-slate-700"
+    >
+      <h2 class="flex flex-col gap-1">
+        <a href="/" class="font-['UbuntuMonoSubset'] text-3xl font-semibold">
+          {SITE_TITLE}
+        </a>
+        <p class="font-medium">{SITE_DESCRIPTION}</p>
+      </h2>
+      <nav class="flex gap-2">
+        <a
+          class="bg-twitter rounded-xl p-2 transition hover:opacity-50"
+          href="https://x.com/eyr1n"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Twitter"
+        >
+          <IconBrandTwitterFilled color="white" size={32} />
+        </a>
+      </nav>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer class="border-dash-t py-8 text-slate-400">
+      &copy; <span class="font-['UbuntuMonoSubset']">2026 {SITE_TITLE}</span>
+    </footer>
+  </body>
+</html>
+
+<style>
+  @font-face {
+    font-family: 'UbuntuMonoSubset';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400 600;
+    src: url(@fontsource-variable/ubuntu-sans-mono/files/ubuntu-sans-mono-latin-wght-normal.woff2)
+      format('woff2-variations');
+  }
+</style>

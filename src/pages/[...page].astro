@@ -1,0 +1,86 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import Date from '../components/Date.astro';
+import type { Page, PaginateFunction } from 'astro';
+import Button from '../components/Button.astro';
+import Base from '../layouts/Base.astro';
+import { Image } from 'astro:assets';
+
+export interface Props {
+  page: Page<CollectionEntry<'posts'>>;
+}
+
+export async function getStaticPaths({
+  paginate,
+}: {
+  paginate: PaginateFunction;
+}) {
+  const posts = await getCollection('posts');
+  const sortedPosts = posts.sort(
+    (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+  );
+  return paginate(sortedPosts, { pageSize: 10 });
+}
+
+const { page }: Props = Astro.props;
+---
+
+<Base title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <section class="pt-2">
+    {
+      page.data.map((post) => {
+        const hasEyecatch = Boolean(post.data.eyecatch);
+        return (
+          <article class="border-b border-slate-300">
+            <a
+              href={`/posts/${post.slug}`}
+              class:list={[
+                'items-start gap-2 py-2.5 sm:py-3',
+                hasEyecatch
+                  ? 'grid grid-cols-[1fr_104px] sm:grid-cols-[1fr_140px]'
+                  : 'block',
+              ]}
+            >
+              <div class="order-1 flex min-w-0 flex-col justify-start gap-0.5">
+                <Date date={post.data.date} />
+                <h2 class="min-h-[2lh] text-base leading-snug font-semibold text-slate-800 sm:text-lg">
+                  {post.data.title}
+                </h2>
+                {post.data.description && (
+                  <p class="text-sm text-slate-400">{post.data.description}</p>
+                )}
+              </div>
+              {hasEyecatch && (
+                <Image
+                  src={post.data.eyecatch!}
+                  alt="eyecatch"
+                  class="order-2 aspect-4/3 w-full rounded-sm object-cover"
+                />
+              )}
+            </a>
+          </article>
+        );
+      })
+    }
+  </section>
+  <nav class="flex items-center justify-between py-8">
+    <Button
+      href={page.url.prev}
+      disabled={!page.url.prev}
+      class="px-4 py-3 font-['UbuntuMonoSubset'] font-medium"
+    >
+      &lt; Prev
+    </Button>
+    <div class="font-['UbuntuMonoSubset'] font-medium">
+      {page.currentPage} / {page.lastPage}
+    </div>
+    <Button
+      href={page.url.next}
+      disabled={!page.url.next}
+      class="block px-4 py-3 font-['UbuntuMonoSubset'] font-medium"
+    >
+      Next &gt;
+    </Button>
+  </nav>
+</Base>

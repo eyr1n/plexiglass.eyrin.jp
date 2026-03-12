@@ -1,0 +1,41 @@
+{
+  "name": "eyrin.jp",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro check && astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "format": "prettier ."
+  },
+  "dependencies": {
+    "@fontsource-variable/ubuntu-sans-mono": "^5.2.7",
+    "@tabler/icons-react": "^3.33.0",
+    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/vite": "^4.2.1",
+    "katex": "^0.16.22",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "tailwindcss": "^4.2.1"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.2",
+    "@astrojs/react": "^4.4.2",
+    "@astrojs/rss": "^4.0.15",
+    "@astrojs/sitemap": "^3.7.0",
+    "@types/react": "^19.1.6",
+    "@types/react-dom": "^19.1.5",
+    "@types/subset-font": "^2.3.0",
+    "astro": "^5.18.0",
+    "prettier": "^3.5.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.7.2",
+    "rehype-katex": "^7.0.1",
+    "remark-behead": "^3.1.0",
+    "remark-math": "^6.0.0",
+    "subset-font": "^2.4.0",
+    "typescript": "^5.8.3"
+  }
+}

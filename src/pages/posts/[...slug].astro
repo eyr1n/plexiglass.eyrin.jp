@@ -1,0 +1,69 @@
+---
+import { type CollectionEntry, getCollection } from 'astro:content';
+import Date from '../../components/Date.astro';
+import { SITE_TITLE } from '../../consts';
+import Base from '../../layouts/Base.astro';
+import { Image } from 'astro:assets';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: post,
+  }));
+}
+
+const post: CollectionEntry<'posts'> = Astro.props;
+const { Content } = await post.render();
+const { title, date, description, eyecatch } = post.data;
+const eyecatchUrl =
+  eyecatch && Astro.site
+    ? new URL(eyecatch.src, Astro.site).toString()
+    : undefined;
+---
+
+<Base title={`${title} | ${SITE_TITLE}`} description={description ?? ''}>
+  <Fragment slot="head">
+    {
+      eyecatchUrl && (
+        <>
+          <meta property="og:image" content={eyecatchUrl} />
+          <meta property="twitter:image" content={eyecatchUrl} />
+        </>
+      )
+    }
+  </Fragment>
+  <article>
+    <header class="border-dash-b pt-6 pb-12">
+      {
+        eyecatch && (
+          <Image
+            src={eyecatch}
+            alt="eyecatch"
+            class="aspect-video w-full rounded-md object-cover"
+          />
+        )
+      }
+      <div class:list={['flex flex-col gap-3', eyecatch ? 'pt-14' : 'pt-0']}>
+        <Date date={date} />
+        <h1
+          class="text-2xl leading-tight font-semibold text-slate-800 md:text-3xl"
+        >
+          {title}
+        </h1>
+      </div>
+    </header>
+    <section
+      class="prose prose-slate prose-a:text-sky-600 prose-pre:rounded-md max-w-none pt-12 pb-12"
+    >
+      <Content />
+    </section>
+  </article>
+</Base>
+
+<style is:global>
+  .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
+</style>
